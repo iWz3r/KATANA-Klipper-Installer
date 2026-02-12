@@ -1,87 +1,144 @@
 <div align="center">
-  <img src="docs/images/logo.png" alt="KATANA Logo" width="300">
-  <h1>KATANA - The Klipper Blade</h1>
+  <img width="610" height="688" alt="KATANAOS" src="https://github.com/user-attachments/assets/bed6be9f-2638-4f6b-9682-c89b61f46ecc" />
+
+
+  <h1>⚔️ KATANAOS - Pro-Grade Klipper Suite</h1>
+
+
+  <a href="https://www.gnu.org/licenses/gpl-3.0">
+    <img src="https://img.shields.io/badge/License-GPLv3-blueviolet.svg" alt="License">
+  </a>
+  <img src="https://img.shields.io/badge/Platform-Debian%20%7C%20Raspbian%20%7C%20Armbian-ff00bf.svg" alt="Platform">
+  <img src="https://img.shields.io/badge/Language-Bash%20Script-00ffff.svg" alt="Language">
+
+
+  <br/><br/>
+
+
+  <p>
+    <b>Opinionated automation for the modern 3D printing stack.</b><br>
+    Deploys a hardened, fully configured Klipper environment (including essential macros) in minutes.
+  </p>
 </div>
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE.txt)
-[![Klipper](https://img.shields.io/badge/Klipper-Ecosystem-orange.svg)](https://www.klipper3d.org/)
-[![Version](https://img.shields.io/badge/Version-v2.0-green.svg)]()
-[![Platform](https://img.shields.io/badge/Platform-Raspberry%20Pi%20%7C%20Linux-lightgrey.svg)]()
 
-> **"The sharpest tool in your 3D Printing Arsenal."**
-> A modern, modular, and high-performance replacement for KIAUH.
-
----
-
-## 📸 Screenshots
-
-<div align="center">
-  <img src="docs/images/screenshot.png" alt="KATANA Interface" width="600">
-  <p><i>(Place your screenshot in `docs/images/screenshot.png` to see it here)</i></p>
-</div>
-
----
+<hr/>
 
 
-## 🔥 Why KATANA?
+## ⚡ Overview
 
-KATANA is built for speed, stability, and control. It completely replaces legacy installers with a professional architecture.
 
-| Feature | ⚔️ KATANA v2.0 | 🐢 Legacy (KIAUH) |
-| :--- | :--- | :--- |
-| **Architecture** | **Modular & Clean** | Monolithic Spaghetti |
-| **Engine Switching** | **Seamless (Klipper ↔ Kalico)** | ❌ Not available |
-| **Flow Control** | **Auto-Adaptive Purge & Park** | ❌ Manual Config only |
-| **Hardware Tool** | **The Forge (Auto-Flash)** | ⚠️ Basic Functions |
-| **Diagnostics** | **Dr. KATANA Log Analysis** | ❌ None |
-| **Backup** | **Vault (Auto-Backup & Rollback)** | ⚠️ Basic |
+**KATANAOS** is a CLI management suite engineered to streamline the deployment and maintenance of the Klipper ecosystem. Unlike modular toolboxes that require extensive manual menu navigation, KATANAOS utilizes an **"Auto-Pilot" workflow** to provision the entire stack (Firmware, API, Reverse Proxy, HMI) in a single execution pass.
 
----
 
-## 🚀 Quick Start
+It is designed for users who treat their 3D printer as a production appliance, prioritizing **security, stability, and reproducible configuration** over manual tinkering.
 
-Get started in seconds. Open your terminal on your Raspberry Pi:
+
+## 📦 Core Architecture
+
+
+### 1. 🟣 Deployment Matrix
+A real-time, pixel-perfect dashboard that verifies the installation state of the stack components.
+* **Function:** Checks for Klipper, Kalico, Moonraker, UI frontends, and system services.
+* **Purpose:** Provides immediate visual feedback on which parts of the ecosystem are deployed on the host.
+
+
+### 2. ⚡ Dynamic Nginx Management
+KATANAOS handles the reverse proxy configuration automatically.
+* **Feature:** Switch between **Mainsail** and **Fluidd** instantly via the menu.
+* **Mechanism:** The script rewrites the Nginx site configuration to point to the selected frontend and restarts the service seamlessly.
+
+
+### 3. 🔥 The Forge (Hardware Automator)
+A dedicated engine for MCU management and communication.
+* **Smart Device Scan:** Scans `/dev/serial/by-id/` to detect connected MCUs.
+* **Interactive Build:** Launches `make menuconfig` automatically. **Important:** You must select the correct architecture for your mainboard manually.
+* **Hybrid Flashing:** Attempts automatic USB flashing. For boards requiring SD card updates (e.g., Creality), the script compiles the binary to `~/klipper/out/klipper.bin` for you to copy manually.
+* **Auto CAN-Bus:** Automatically creates the `/etc/network/interfaces.d/can0` interface with **1M bitrate** and optimized `txqueuelen`, eliminating manual Linux network configuration.
+
+
+### 4. ⚙️ Engine Manager (Dual-Core)
+Runtime flexibility for power users.
+* **Feature:** Switch between **Klipper** (Standard) and **Kalico** (High-Performance) firmware engines instantly.
+* **Mechanism:** Dynamically rewrites systemd service paths to swap the active execution environment without reinstalling or reflashing the SD card.
+
+
+### 5. 👁️ HMI & Vision Stack
+Full support for local machine interfaces.
+* **Full Media Stack:** One-click deployment of **Crowsnest** (Webcam Streaming Daemon) and **KlipperScreen** (Touch UI) in a single pass.
+
+
+### 6. 🧩 Smart Extension Support
+Intelligent installation logic for modern Klipper extensions.
+* **Smart Probe Selector:** Enforces exclusive installation logic for **Beacon3D** or **Cartographer** to prevent udev conflicts.
+* **KAMP:** Clones the repo and injects the update manager entry into `moonraker.conf`.
+* **ShakeTune:** Automated installation of the Klippain ShakeTune module.
+* **RatOS:** Option to clone the RatOS configuration repository for easy integration.
+
+
+### 7. 🩺 Dr. KATANA (Diagnostics)
+An embedded log analyzer that scans `klippy.log` for known failure patterns.
+*   **Log Doctor:** Automatically detects MCU shutdowns, ADC out-of-range errors, and timer glitches.
+*   **Rx:** Suggests human-readable fixes for common configuration issues.
+
+
+### 8. 🛡️ System Hardening (Standardized)
+Security is not an option; it is a default.
+* **UFW Firewall:** Automated rule generation denying all incoming traffic except essential ports (SSH:22, HTTP:80, API:7125).
+* **Log2Ram:** Integrates the Log2Ram daemon to redirect system logging to RAM, significantly reducing write cycles on SD cards.
+
+
+## 🛠️ Usage
+
+
+**Requirements:**
+* Hardware: Raspberry Pi (3/4/5/Zero2), Orange Pi, or generic Linux host.
+* OS: Debian Bookworm / Bullseye (Lite recommended).
+* User: Standard user with `sudo` privileges.
+
+
+### Installation & Migration
+
+
+### **Empfehlung für dich**
+Wenn du vor der Installation alle Pakete aktualisieren willst, führe vorher manuell aus:
+
 
 ```bash
-git clone https://github.com/Extrutex/KATANA-Klipper-Installer.git
-cd KATANA-Klipper-Installer
-./katana.sh
+sudo apt update && sudo apt upgrade -y
 ```
 
----
 
-## 🛠️ The Arsenal (Features)
+**1. (Optional) Remove legacy KIAUH:**
 
-### 1. 🧠 Core Engine
-*   **Auto-Pilot:** Install Klipper, Moonraker, Mainsail & Crowsnest with one click.
-*   **Engine Manager:** Switch between **standard Klipper** and **Kalico (High-Speed)** instantly without losing your config.
 
-### 2. ⚡ KATANA-FLOW
-*   **Smart Park:** Automatically parks the print head near the object.
-*   **Adaptive Purge:** Purges exactly as much generic filament as needed, right before the print.
+````bash
 
-### 3. 🔥 THE FORGE
-*   **USB & CAN Scanner:** Detects your MCU automatically.
-*   **Flash Wizard:** Interactive firmware builder and flasher.
-*   **CanNet:** Initializes CAN0 networks in seconds.
 
-### 4. 🩺 Dr. KATANA
-*   **Log Doctor:** Scans your `klippy.log` for MCU shutdowns, timer too close errors, and heater faults. Gives you human-readable solutions.
+cd ~
+rm -rf ~/kiauh
+````
 
-### 5. 🛡️ Security & Vault
-*   **Hardening:** UFW Firewall configuration.
-*   **Backup Manager:** Automated cron-job backups of your `printer_data`.
 
----
+````bash
+cd ~
+git clone https://github.com/Extrutex/KATANA-Klipper-Installer.git
+mv KATANA-Klipper-Installer/katanaos.sh .
+chmod +x katanaos.sh
+./katanaos.sh
+````
 
-## � Screenshots
 
-*(Screenshots coming soon)*
+**License**
+KATANAOS is free software:
+This file may be distributed under the terms of the GNU GPLv3 license.
 
----
 
-## 🤝 Contributing
+## 👤 Author
 
-This project is open source. Feel free to open issues or pull requests.
 
-*Built with ❤️ for the Voron & Klipper Community.*
+**KATANAOS** created by **Extrutex**.
+
+
+If this script saved you time, consider supporting the project:
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg)](https://Ko-fi.com/3dw_sebastianwindt)
