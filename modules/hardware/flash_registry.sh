@@ -36,10 +36,10 @@ function detect_mcus() {
     # Check if katapult/scripts/flashtool.py exists or use python script
     # Providing a simple python one-liner to query canbus uuids (requires Klipper/Katapult env)
     
-    if [ -f "$HOME/klipper/lib/canboot/flash_can.py" ]; then
-         # Using Klipper's CAN query if available (or custom script)
-         # For now, let's just list network interfaces
-         ip -br link show can0 2>/dev/null || echo "  [warn] Interface can0 not up."
+    if [ -f "$KATANA_ROOT/scripts/can_scanner.py" ]; then
+        python3 "$KATANA_ROOT/scripts/can_scanner.py"
+    else
+         echo "  [!] Scanner script missing."
     fi
     
     read -p "  Press Enter..."
@@ -103,11 +103,11 @@ function setup_can_network() {
     
     # 1. Ask for Bitrate
     echo "  Target Bitrate:"
-    echo "  1) 500000 (500k)"
-    echo "  2) 1000000 (1M)"
+    echo "  1) 1000000 (1M) - [RECOMMENDED for Katana]"
+    echo "  2) 500000 (500k) - [Legacy]"
     read -p "  >> " br_sel
-    local bitrate="500000"
-    if [ "$br_sel" == "2" ]; then bitrate="1000000"; fi
+    local bitrate="1000000"
+    if [ "$br_sel" == "2" ]; then bitrate="500000"; fi
     
     # 2. Create Interface File
     local net_file="/etc/network/interfaces.d/can0"
