@@ -6,8 +6,9 @@ function run_flash_menu() {
     while true; do
         draw_header "THE FORGE PRO - MCU MANAGER"
         echo "  1) Detect MCUs (USB & CAN)"
-        echo "  2) Build & Flash Firmware (Klipper)"
-        echo "  3) Setup CAN-Bus Network (Katapult/CanBoot)"
+        echo "  2) Build & Flash Firmware (Manual)"
+        echo "  3) Setup CAN-Bus Network"
+        echo "  4) Flash via HAL (Board Profile)"
         echo "  B) Back"
         read -p "  >> " ch
 
@@ -15,6 +16,7 @@ function run_flash_menu() {
             1) detect_mcus ;;
             2) build_and_flash ;;
             3) setup_can_network ;;
+            4) run_hal_flasher ;; # Defined in flash_engine.sh
             [bB]) return ;;
             *) log_error "Invalid Selection" ;;
         esac

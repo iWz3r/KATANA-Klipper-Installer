@@ -69,6 +69,7 @@ function run_vision_stack() {
 function run_forge() {
     if [ -f "$MODULES_DIR/hardware/flash_registry.sh" ]; then
         source "$MODULES_DIR/hardware/flash_registry.sh"
+        source "$MODULES_DIR/hardware/flash_engine.sh"
         run_flash_menu
     else
         log_error "Module missing: hardware/flash_registry.sh"
