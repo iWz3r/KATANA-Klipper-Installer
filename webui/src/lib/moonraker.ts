@@ -62,8 +62,36 @@ class HorizonClient {
             params: { script },
             id: Math.floor(Date.now() / 1000)
         });
-        // Optimistic log add? No, wait for response/event in strict mode.
-        // For now we just send.
+    }
+
+    public async fetchConfig(): Promise<Record<string, any>> {
+        return new Promise((resolve, reject) => {
+            const id = Math.floor(Date.now() / 1000);
+            let resolved = false;
+            
+            const handler = (data: any) => {
+                if (data.id === id && data.result) {
+                    resolved = true;
+                    this.supervisor.onMessageRaw(handler);
+                    resolve(data.result);
+                }
+            };
+            
+            const unsub = this.supervisor.onMessageRaw(handler);
+            this.supervisor.send({
+                jsonrpc: "2.0",
+                method: "printer.objects.query",
+                params: { objects: { configfile: null } },
+                id
+            });
+            
+            setTimeout(() => {
+                if (!resolved) {
+                    unsub();
+                    reject(new Error('Config request timeout'));
+                }
+            }, 5000);
+        });
     }
 
     public send(payload: any) {
