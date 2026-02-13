@@ -2,20 +2,22 @@
 # modules/extras/katana_flow.sh
 
 function install_katana_flow() {
-    draw_header "KATANA-FLOW: SMART PURGE & MESH"
-    echo "  This module installs the 'Smart Purge' and 'Adaptive Mesh'"
-    echo "  macros (KAMP-compatible) into your configuration."
-    echo ""
-    echo "  1) Install KATANA-FLOW"
-    echo "  2) Remove KATANA-FLOW"
-    echo "  B) Back"
-    read -p "  >> " ch
-    
-    case $ch in
-        1) do_install_flow ;;
-        2) do_remove_flow ;;
-        [bB]) return ;;
-    esac
+    while true; do
+        draw_header "KATANA-FLOW: SMART PURGE & MESH"
+        echo "  This module installs the 'Smart Purge' and 'Adaptive Mesh'"
+        echo "  macros (KAMP-compatible) into your configuration."
+        echo ""
+        echo "  1) Install KATANA-FLOW"
+        echo "  2) Remove KATANA-FLOW"
+        echo "  B) Back"
+        read -p "  >> " ch
+        
+        case $ch in
+            1) do_install_flow ;;
+            2) do_remove_flow ;;
+            [bB]) return ;;
+        esac
+    done
 }
 
 function do_install_flow() {

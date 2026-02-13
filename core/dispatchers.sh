@@ -26,8 +26,8 @@ function run_autopilot() {
     fi
     
     # Extras
-    if [ -f "$MODULES_DIR/extras/install_katana_flow.sh" ]; then
-        source "$MODULES_DIR/extras/install_katana_flow.sh"
+    if [ -f "$MODULES_DIR/extras/katana_flow.sh" ]; then
+        source "$MODULES_DIR/extras/katana_flow.sh"
         install_katana_flow
     fi
     
