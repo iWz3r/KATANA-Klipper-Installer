@@ -116,5 +116,3 @@ function draw_exit_screen() {
     echo "  >> DISENGAGED."
     echo -e "${NC}"
 }
-
-
