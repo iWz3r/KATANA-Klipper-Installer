@@ -41,6 +41,7 @@ function do_install_ratos() {
     read -p "  Press Enter..."
 }
 
+function do_install_klipper() {
     local variant="$1"
     log_info "Installing Klipper ($variant)..."
     
