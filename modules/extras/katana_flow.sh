@@ -37,7 +37,7 @@ function do_install_flow() {
     # 2. Copy Config Files
     log_info "Deploying Macro files..."
     cp "$CONFIGS_DIR/katana_flow/smart_purge.cfg" "$flow_dir/smart_purge.cfg"
-    cp "$CONFIGS_DIR/katana_flow/adaptive_mesh.cfg" "$flow_dir/adaptive_mesh.cfg"
+    cp "$CONFIGS_DIR/katana_flow/smart_park.cfg" "$flow_dir/smart_park.cfg"
     
     # 3. Inject Include into printer.cfg
     local pcfg="$cfg_dir/printer.cfg"
@@ -64,7 +64,7 @@ function do_install_flow() {
     
     log_success "KATANA-FLOW Installed."
     echo "  [i] IMPORTANT: Update your START_PRINT macro to use:"
-    echo "      FLOW_MESH"
+    echo "      FLOW_PARK"
     echo "      FLOW_PURGE"
     read -p "  Press Enter..."
 }
