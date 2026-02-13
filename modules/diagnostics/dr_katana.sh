@@ -1,51 +1,71 @@
 #!/bin/bash
+# --- DR. KATANA: DIAGNOSTICS & REPAIR ---
 
 function run_dr_katana() {
-    draw_header "DR. KATANA - LOG DIAGNOSTICS"
-    echo "  Scans your klippy.log for common failures."
-    
-    local log_file="$HOME/printer_data/logs/klippy.log"
-    
-    if [ ! -f "$log_file" ]; then
-        log_error "No klippy.log found at $log_file"
-        read -p "  Press Enter..."
-        return
-    fi
-    
-    echo "  Analyzing $(basename $log_file)..."
-    echo "  ----------------------------------------"
-    
-    # Analysis Logic
-    local found_issues=0
-    
-    # 1. Timer too close
-    if grep -q "Timer too close" "$log_file"; then
-        echo -e "${C_RED}[!] MCU Shutdown: Timer too close${NC}"
-        echo "    -> Possible Cause: RPi overloaded, poor USB cable, or SD card slow."
-        found_issues=1
-    fi
-    
-    # 2. ADC out of range
-    if grep -q "ADC out of range" "$log_file"; then
-        echo -e "${C_RED}[!] ADC out of range${NC}"
-        echo "    -> Possible Cause: Thermistor broken, shorted, or loose wiring."
-        found_issues=1
-    fi
-    
-    # 3. Heater not heating
-    if grep -q "Heater .* not heating at expected rate" "$log_file"; then
-        echo -e "${C_RED}[!] Heater Fault${NC}"
-        echo "    -> Possible Cause: Heater cartridge loose, PSU voltage drop, or fan blowing on block."
-        found_issues=1
-    fi
-    
-    # 4. No issues?
-    if [ $found_issues -eq 0 ]; then
-        log_success "No critical common errors found in recent logs."
-        echo "    (That doesn't mean everything is perfect, but it looks healthy!)"
-    fi
-    
-    echo ""
-    echo "  [i] Full log handling coming in v2.1"
+    while true; do
+        draw_header "DR. KATANA - DIAGNOSTICS"
+        echo "  [1] SERVICE CONTROL (Start/Stop)"
+        echo "  [2] LOG VIEWER (Klippy.log)"
+        echo "  [3] SYSTEM REPAIR (Permissions)"
+        echo "  [B] Back"
+        echo ""
+        read -p "  >> COMMAND: " cmd
+        
+        case $cmd in
+            1) service_control_menu ;;
+            2) view_logs ;;     # Placeholder
+            3) repair_system ;; # Placeholder
+            [bB]) return ;;
+            *) log_error "Invalid selection." ;;
+        esac
+    done
+}
+
+function service_control_menu() {
+    while true; do
+        draw_header "SERVICE MANAGER"
+        
+        # Display Current Status
+        local s_klipper=$(systemctl is-active klipper 2>/dev/null || echo "inactive")
+        local s_moonraker=$(systemctl is-active moonraker 2>/dev/null || echo "inactive")
+        local s_crowsnest=$(systemctl is-active crowsnest 2>/dev/null || echo "inactive")
+        
+        echo -e "  Klipper:   $s_klipper"
+        echo -e "  Moonraker: $s_moonraker"
+        echo -e "  Crowsnest: $s_crowsnest"
+        echo ""
+        echo "  [1] Start Klipper"
+        echo "  [2] Stop Klipper"
+        echo "  [3] Restart Klipper"
+        echo ""
+        echo "  [4] Start Moonraker"
+        echo "  [5] Stop Moonraker"
+        echo "  [6] Restart Moonraker"
+        echo ""
+        echo "  [B] Back"
+        
+        read -p "  >> " sc
+        
+        case $sc in
+            1) exec_silent "Starting Klipper" "sudo systemctl start klipper" ;;
+            2) exec_silent "Stopping Klipper" "sudo systemctl stop klipper" ;;
+            3) exec_silent "Restarting Klipper" "sudo systemctl restart klipper" ;;
+            
+            4) exec_silent "Starting Moonraker" "sudo systemctl start moonraker" ;;
+            5) exec_silent "Stopping Moonraker" "sudo systemctl stop moonraker" ;;
+            6) exec_silent "Restarting Moonraker" "sudo systemctl restart moonraker" ;;
+            
+            [bB]) return ;;
+        esac
+    done
+}
+
+function view_logs() {
+    echo "  >> Log Viewer not implemented yet."
+    read -p "  Press Enter..."
+}
+
+function repair_system() {
+    echo "  >> Repair function not implemented yet."
     read -p "  Press Enter..."
 }
