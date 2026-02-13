@@ -23,10 +23,28 @@ WORKDIR /home/pi/KATANA
 COPY . /home/pi/KATANA
 RUN chown -R pi:pi /home/pi/KATANA
 
-# 5. Switch to user
+# 5. Mock systemctl for simulation
+RUN echo '#!/bin/bash\n\
+    if [ "$1" == "is-active" ]; then\n\
+    if [ "$2" == "--quiet" ]; then shift; fi\n\
+    SERVICE=$1\n\
+    if [ -f "/tmp/$SERVICE.active" ]; then exit 0; else exit 1; fi\n\
+    elif [ "$1" == "start" ] || [ "$1" == "restart" ]; then\n\
+    shift\n\
+    for SERVICE in "$@"; do touch "/tmp/$SERVICE.active"; echo "Started $SERVICE"; done\n\
+    elif [ "$1" == "stop" ]; then\n\
+    shift\n\
+    for SERVICE in "$@"; do rm -f "/tmp/$SERVICE.active"; echo "Stopped $SERVICE"; done\n\
+    elif [ "$1" == "enable" ] || [ "$1" == "daemon-reload" ]; then\n\
+    exit 0\n\
+    else\n\
+    echo "Mock systemctl: $1 not fully implemented"\n\
+    fi' > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
+
+# 6. Switch to user
 USER pi
 
-# 6. Make script executable
+# 7. Make script executable
 RUN chmod +x katanaos.sh
 
 # 7. Entrypoint

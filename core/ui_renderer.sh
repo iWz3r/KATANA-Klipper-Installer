@@ -59,7 +59,7 @@ function get_status_line() {
          fi
     else
         # Service check
-        if systemctl is-active --quiet "$service"; then
+        if systemctl is-active --quiet "$service" 2>/dev/null; then
             status="${C_GREEN}ONLINE ${NC}"
             dot="${C_GREEN}●${NC}"
         fi
