@@ -1,47 +1,18 @@
-#!/bin/bash
-
-# --- VISUAL ENGINE (Restored) ---
-C_PURPLE='\033[38;5;93m'
-C_PINK='\033[38;5;201m'
-C_CYAN='\033[38;5;51m'
-C_NEON='\033[38;5;87m'
-C_GREEN='\033[38;5;46m'
-C_RED='\033[38;5;196m'
-C_GREY='\033[38;5;238m'
-C_TXT='\033[38;5;255m'
-C_WARN='\033[38;5;226m'
+# --- VISUAL ENGINE (PRO) ---
+C_PC='\033[38;5;81m'  # Primary Cyan
+C_SC='\033[38;5;245m' # Secondary Grey
+C_HL='\033[38;5;208m' # Highlight Orange
+C_OK='\033[38;5;46m'  # Success Green
+C_ER='\033[38;5;196m' # Error Red
+C_BG='\033[48;5;234m' # Dark BG
 NC='\033[0m'
 
-WIDTH=72
+WIDTH=70
 
-# --- PIXEL PERFECT HELPER ---
-function print_box_line() {
-    local content="$1"
-    # 1. Remove color codes to measure real length
-    local clean_content=$(echo -e "$content" | sed "s/\x1B\[[0-9;]*[a-zA-Z]//g")
-    # 2. Calculate length
-    local len=${#clean_content}
-    # 3. Calculate padding
-    local pad_len=$((WIDTH - 2 - len))
-    if [ $pad_len -lt 0 ]; then pad_len=0; fi
-    local padding=$(printf '%*s' "$pad_len")
-    # 4. Print line
-    echo -e "${C_PURPLE}║${NC}${content}${padding}${C_PURPLE}║${NC}"
-}
-
-function draw_line() { printf "${C_PURPLE}╠═$(printf '═%.0s' $(seq 1 $((WIDTH-2))))═╣${NC}\n"; }
-function draw_top()  { printf "${C_PURPLE}╔═$(printf '═%.0s' $(seq 1 $((WIDTH-2))))═╗${NC}\n"; }
-function draw_bot()  { printf "${C_PURPLE}╚═$(printf '═%.0s' $(seq 1 $((WIDTH-2))))═╝${NC}\n"; }
-
-function menu_item() {
-    local id=$1 title=$2 desc=$3
-    local row_content=" ${C_PINK}[${id}]${NC} ${C_CYAN}$(printf "%-25s" "$title")${NC} ${C_GREY}${desc}${NC}"
-    print_box_line "$row_content"
-}
-
-function draw_main_menu() {
+# --- HELPERS ---
+function header() {
     clear
-    echo -e "${C_PURPLE}"
+    echo -e "${C_PC}"
     cat << "EOF"
       /\      _  __    _    _____    _    _   _    _      ___    ____ 
      /  \    | |/ /   / \  |_   _|  / \  | \ | |  / \    / _ \  / ___|
@@ -50,32 +21,67 @@ function draw_main_menu() {
              |_|\_\/_/   \_\ |_| /_/   \_\_| \_/_/   \_\ \___/  |____/ 
                                                          v2.0 MASTER
 EOF
-    echo -e "${C_NEON}    >> SYSTEM OVERLORD // COMMAND INTERFACE${NC}"
+    echo -e "${NC}"
+}
+
+function status_dot() {
+    local service=$1
+    if systemctl is-active --quiet "$service"; then
+        echo -e "${C_OK}●${NC}"
+    else
+        echo -e "${C_SC}○${NC}"
+    fi
+}
+
+function draw_row() {
+    local id="$1"
+    local title="$2"
+    local desc="$3"
+    local status="$4"
     
-    # Get Statuses
-    local s_klipper=$(get_service_status "klipper")
-    local s_moonraker=$(get_service_status "moonraker")
+    # Format: [ID] Title .......... Desc [Status]
+    printf "  ${C_HL}%-3s${NC} ${C_PC}%-18s${NC} ${C_SC}%-30s${NC}" "[$id]" "$title" "$desc"
+    if [ ! -z "$status" ]; then
+        echo -e "$status"
+    else
+        echo ""
+    fi
+}
+
+function draw_sep() {
+    echo -e "${C_SC}  ──────────────────────────────────────────────────────────${NC}"
+}
+
+function draw_main_menu() {
+    header
     
-    draw_top
-    print_box_line " ${C_TXT}COMMAND DECK${NC}"
-    draw_line
-    print_box_line " ${C_TXT}[ INSTALLATION ]${NC}"
-    menu_item "1" "AUTO-PILOT" "Full Stack Install (God Mode)"
-    menu_item "2" "CORE ENGINE" "Klipper $s_klipper & Moonraker $s_moonraker"
-    menu_item "3" "WEB INTERFACE" "Mainsail / Fluidd"
-    menu_item "4" "KATANA-FLOW" "Smart Park & Adaptive Purge"
-    draw_line
-    print_box_line " ${C_TXT}[ CONFIGURATION ]${NC}"
-    menu_item "5" "THE FORGE" "Flash MCU & CAN-Bus"
-    menu_item "6" "ENGINE MANAGER" "Klipper <-> ${C_PURPLE}Kalico (Limitless)${NC}"
-    draw_line
-    print_box_line " ${C_TXT}[ MAINTENANCE ]${NC}"
-    menu_item "7" "KATANA DOCTOR" "Diagnostic & Repair"
-    menu_item "8" "SYSTEM PREP" "Updates & Dependencies"
-    menu_item "9" "SEC & BACKUP" "Firewall & Backup"
-    draw_line
-    menu_item "X" "EXIT" "Close KATANAOS"
-    draw_bot
+    # Fetch Statuses (Silent)
+    local s_klipper=$(status_dot "klipper")
+    local s_moonraker=$(status_dot "moonraker")
+    local s_crowsnest=$(status_dot "crowsnest")
+
+    echo -e "  ${C_SC}:: SYSTEM STATUS ::${NC}   Klipper: $s_klipper   Moonraker: $s_moonraker   Cam: $s_crowsnest"
+    echo ""
+    draw_sep
+    draw_row "1" "AUTO-PILOT" "One-Click Execution (Recommended)" ""
+    draw_sep
+    echo ""
+    echo -e "  ${C_PC}:: CORE STACK ::${NC}"
+    draw_row "2" "Core Engine" "Klipper, Moonraker & Nginx" ""
+    draw_row "3" "Web Interface" "Mainsail / Fluidd Dashboard" ""
+    draw_row "4" "KATANA-FLOW" "Smart Park & Adaptive Purge" ""
+    echo ""
+    echo -e "  ${C_PC}:: HARDWARE & CONFIG ::${NC}"
+    draw_row "5" "The Forge" "MCU Flashing & CAN-Bus" ""
+    draw_row "6" "Engine Manager" "Switch: Klipper <-> Kalico" ""
+    echo ""
+    echo -e "  ${C_PC}:: MAINTENANCE ::${NC}"
+    draw_row "7" "Dr. KATANA" "Log Analysis & Diagnostics" ""
+    draw_row "8" "System Prep" "Update OS & Dependencies" ""
+    draw_row "9" "Vault" "Security & Backup" ""
+    echo ""
+    draw_sep
+    draw_row "X" "EXIT" "" ""
     echo ""
 }
 

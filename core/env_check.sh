@@ -1,13 +1,5 @@
 #!/bin/bash
 
-function get_service_status() {
-    local service=$1
-    if systemctl is-active --quiet "$service"; then
-        echo -e "${C_GREEN}[AKTIV]${NC}"
-    else
-        echo -e "${C_RED}[INAKTIV]${NC}"
-    fi
-}
 
 function check_environment() {
 

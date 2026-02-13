@@ -16,9 +16,19 @@ function install_core_stack() {
     esac
 }
 
-function do_install_klipper() {
     local variant="$1"
     log_info "Installing Klipper ($variant)..."
+    
+    # 0. System Dependencies (Robustness Fix)
+    log_info "Ensuring Klipper System Dependencies..."
+    local k_deps=("virtualenv" "python3-dev" "libffi-dev" "build-essential" "libncurses-dev" "libusb-dev" "avrdude" "gcc-avr" "binutils-avr" "avr-libc" "stm32flash" "libnewlib-arm-none-eabi" "gcc-arm-none-eabi" "binutils-arm-none-eabi" "libusb-1.0-0-dev")
+    
+    if sudo -n true 2>/dev/null; then
+        sudo apt-get install -y "${k_deps[@]}"
+    else
+         echo "  [!] Sudo required for Klipper dependencies."
+         sudo apt-get install -y "${k_deps[@]}"
+    fi
     
     # 1. Clone
     local repo_dir="$HOME/klipper_repo"
