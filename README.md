@@ -100,12 +100,12 @@ Security is not an option; it is a default.
 ### Installation & Migration
 
 
-### **Empfehlung für dich**
-Wenn du vor der Installation alle Pakete aktualisieren willst, führe vorher manuell aus:
-
+### **0. System Preparation**
+Ensure your Raspberry Pi is up to date and `git` is installed.
 
 ```bash
 sudo apt update && sudo apt upgrade -y
+sudo apt install git -y
 ```
 
 
