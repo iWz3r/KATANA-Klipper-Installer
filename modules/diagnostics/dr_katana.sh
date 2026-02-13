@@ -1,12 +1,19 @@
 #!/bin/bash
 # --- DR. KATANA: DIAGNOSTICS & REPAIR ---
 
+# Source Healer Module if available
+if [ -f "$MODULES_DIR/diagnostics/healer.sh" ]; then
+    source "$MODULES_DIR/diagnostics/healer.sh"
+fi
+
 function run_dr_katana() {
     while true; do
         draw_header "DR. KATANA - DIAGNOSTICS"
         echo "  [1] SERVICE CONTROL (Start/Stop)"
         echo "  [2] LOG VIEWER (Klippy.log)"
         echo "  [3] SYSTEM REPAIR (Permissions)"
+        echo "  [4] DEEP DIAGNOSTICS (Create Zip)"
+        echo "  [5] AUTO-HEALER (One-Click Fix)"
         echo "  [B] Back"
         echo ""
         read -p "  >> COMMAND: " cmd
@@ -14,7 +21,15 @@ function run_dr_katana() {
         case $cmd in
             1) service_control_menu ;;
             2) view_logs ;;     # Placeholder
-            3) repair_system ;; # Placeholder
+            3) repair_system ;;
+            4) run_system_diagnostics ;; # Defined in medic.sh
+            5) 
+                if type run_healer &>/dev/null; then
+                    run_healer
+                else
+                    log_error "Healer module not loaded."
+                fi
+                ;;
             [bB]) return ;;
             *) log_error "Invalid selection." ;;
         esac

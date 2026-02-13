@@ -143,3 +143,9 @@ This file may be distributed under the terms of the GNU GPLv3 license.
 
 If this script saved you time, consider supporting the project:
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg)](https://Ko-fi.com/3dw_sebastianwindt)
+
+
+## v1.0.0-rc1 Features
+- **HORIZON UI**: Modern React Interface
+- **Auto-Healer**: Self-repair system integration
+- **Visual Config**: Edit printer.cfg via GUI

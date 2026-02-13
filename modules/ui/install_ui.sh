@@ -1,12 +1,15 @@
 #!/bin/bash
 # modules/ui/install_ui.sh
 
+# Source Deployment Module
+source "$KATANA_ROOT/modules/system/deploy_webui.sh"
+
 function install_ui_stack() {
     while true; do
         draw_header "WEB INTERFACE INSTALLER"
-        echo "  1) Install Mainsail (Recommended)"
-        echo "  2) Install Fluidd"
-        echo "  3) Remove UI"
+        echo "  1) Mainsail (Standard)"
+        echo "  2) Fluidd (Alternative)"
+        echo "  3) HORIZON (Next-Gen UI)"
         echo "  B) Back"
         echo ""
         read -p "  >> " ch
@@ -14,7 +17,7 @@ function install_ui_stack() {
         case $ch in
             1) do_install_mainsail ;;
             2) do_install_fluidd ;;
-            3) do_remove_ui ;;
+            3) do_install_horizon ;;
             [bB]) return ;;
         esac
     done
@@ -66,6 +69,10 @@ function do_install_fluidd() {
     
     log_success "Fluidd Installed."
     read -p "  Press Enter..."
+}
+
+function do_install_horizon() {
+    deploy_katana_webui
 }
 
 function do_remove_ui() {

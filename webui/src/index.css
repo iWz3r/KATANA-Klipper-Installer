@@ -1,0 +1,82 @@
+:root {
+  /* KATANA Design System */
+  
+  /* Primary HSL Palettes (Techno/Cyber Green) */
+  --primary-hue: 145;
+  --primary-sat: 65%;
+  --primary-lum-low: 15%;
+  --primary-lum-mid: 45%;
+  --primary-lum-high: 65%;
+  
+  --color-primary: hsl(var(--primary-hue), var(--primary-sat), var(--primary-lum-mid));
+  --color-primary-glow: hsla(var(--primary-hue), var(--primary-sat), var(--primary-lum-high), 0.5);
+  
+  /* Backgrounds (Deep Grey/Blue) */
+  --bg-dark: #0f1115;
+  --bg-panel: hsla(220, 10%, 15%, 0.7);
+  --bg-glass: hsla(220, 10%, 20%, 0.3);
+  
+  /* Typography */
+  --font-display: 'Orbitron', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  
+  /* Spacing */
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  
+  /* Effects */
+  --glass-blur: 12px;
+  --border-radius: 12px;
+  --shadow-glow: 0 0 15px var(--color-primary-glow);
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-dark);
+  color: #eeefff;
+  font-family: var(--font-body);
+  overflow: hidden; /* App feel */
+}
+
+/* Glassmorphism Logic */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid hsla(0, 0%, 100%, 0.1);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Headers */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+h1 {
+  background: linear-gradient(90deg, #fff, var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(0, 255, 128, 0.2);
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, hsl(var(--primary-hue), 80%, 20%), hsl(var(--primary-hue), 60%, 40%));
+  border: 1px solid var(--color-primary);
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+}
+
+.btn-primary:hover {
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}

@@ -1,6 +1,6 @@
 #!/bin/bash
 ################################################################################
-#  ⚔️  KATANAOS - THE KLIPPER BLADE v2.0
+#  ⚔️  KATANAOS - THE KLIPPER BLADE v1.0.0-rc1
 # ------------------------------------------------------------------------------
 #  PRO-GRADE KLIPPER INSTALLATION & MANAGEMENT SUITE
 #  Modular Architecture | Native Flow | Multi-Engine
@@ -19,9 +19,11 @@ source "$CORE_DIR/ui_renderer.sh"
 source "$CORE_DIR/env_check.sh"
 source "$CORE_DIR/engine_manager.sh"
 source "$CORE_DIR/dispatchers.sh"
+source "$CORE_DIR/service_manager.sh"
 # source "$MODULES_DIR/hardware/canbus.sh" # Deprecated/Merged into Forge
 if [ -f "$MODULES_DIR/diagnostics/dr_katana.sh" ]; then
     source "$MODULES_DIR/diagnostics/dr_katana.sh"
+    source "$MODULES_DIR/diagnostics/medic.sh"
 fi
 # Hardware Extensions
 source "$MODULES_DIR/extras/install_happy_hare.sh"
@@ -36,7 +38,7 @@ source "$MODULES_DIR/security/menu.sh"
 function main() {
     # 1. Initialize System
     # clear -> Moved to ui_renderer for cleaner flicker control
-    log_info "KATANA v2.0 initializing..."
+    log_info "KATANA v1.0.0-rc1 initializing..."
     check_environment  # Defined in core/env_check.sh
     
     # 2. Main Loop

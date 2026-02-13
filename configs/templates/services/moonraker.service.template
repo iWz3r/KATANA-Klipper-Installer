@@ -1,0 +1,18 @@
+[Unit]
+Description=Moonraker API Server for Klipper
+Documentation=https://moonraker.readthedocs.io/
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{USER}}
+SyslogIdentifier=moonraker
+Environment=MOONRAKER_CONF={{HOME}}/printer_data/config/moonraker.conf
+Environment=MOONRAKER_LOG={{HOME}}/printer_data/logs/moonraker.log
+ExecStart={{HOME}}/moonraker-env/bin/python {{HOME}}/moonraker/moonraker/moonraker.py -d {{HOME}}/printer_data
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

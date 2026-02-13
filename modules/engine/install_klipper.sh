@@ -80,8 +80,13 @@ function do_install_klipper() {
     fi
 
     # 4. Service File
-    # We use the symlink paths so we don't need to change the service file when switching engines!
-    cat <<EOF | sudo tee /etc/systemd/system/klipper.service >/dev/null
+    # Using KATANA Service Manager v2.0
+    if command -v install_service_from_template &> /dev/null; then
+        install_service_from_template "klipper"
+    else
+        # Fallback if manager not loaded
+        log_warn "Service Manager not found. Using fallback."
+        cat <<EOF | sudo tee /etc/systemd/system/klipper.service >/dev/null
 [Unit]
 Description=Klipper 3D Printer Firmware
 After=network.target
@@ -97,8 +102,10 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-    sudo systemctl daemon-reload
-    sudo systemctl enable klipper
+        sudo systemctl daemon-reload
+        sudo systemctl enable klipper
+    fi
+    
     sudo systemctl restart klipper
 
     log_success "Klipper ($variant) installed and service started."
@@ -160,8 +167,12 @@ function do_install_moonraker() {
     fi
 
     # 4. Service File
-    # (Simplified standard service file)
-    cat <<EOF | sudo tee /etc/systemd/system/moonraker.service >/dev/null
+    # Using KATANA Service Manager v2.0
+    if command -v install_service_from_template &> /dev/null; then
+        install_service_from_template "moonraker"
+    else
+         # Fallback
+        cat <<EOF | sudo tee /etc/systemd/system/moonraker.service >/dev/null
 [Unit]
 Description=Moonraker API Server for Klipper
 Requires=network-online.target
@@ -178,8 +189,10 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-    sudo systemctl daemon-reload
-    sudo systemctl enable moonraker
+        sudo systemctl daemon-reload
+        sudo systemctl enable moonraker
+    fi
+    
     sudo systemctl restart moonraker
     
     log_success "Moonraker installed and service started."
