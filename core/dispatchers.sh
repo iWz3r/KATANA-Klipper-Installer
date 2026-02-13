@@ -55,14 +55,13 @@ function run_ui_installer() {
     fi
 }
 
-# 4. EXTRAS (Renamed from KATANA-FLOW only)
-function run_katana_flow_installer() {
-    if [ -f "$MODULES_DIR/extras/install_katana_flow.sh" ]; then
-        source "$MODULES_DIR/extras/install_katana_flow.sh"
-        # We now call the menu, not just the single function
-        do_extras_menu
+# 4. HMI & VISION (Renamed from KATANA-FLOW)
+function run_vision_stack() {
+    if [ -f "$MODULES_DIR/vision/install_crowsnest.sh" ]; then
+        source "$MODULES_DIR/vision/install_crowsnest.sh"
+        install_vision_stack
     else
-        log_error "Module missing: extras/install_katana_flow.sh"
+        log_error "Module missing: vision/install_crowsnest.sh"
     fi
 }
 

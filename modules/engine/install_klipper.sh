@@ -129,7 +129,58 @@ function do_install_kalico() {
 
 function do_install_moonraker() {
     log_info "Installing Moonraker..."
-    # Placeholder for brevity - logic is similar to Klipper
-    log_success "Moonraker installed (Placeholder)."
+    
+    # 1. Dependencies (System)
+    log_info "Installing System Dependencies for Moonraker..."
+    # Common requirements for Moonraker
+    local m_deps=("python3-virtualenv" "python3-dev" "liblmdb-dev" "libopenjp2-7" "libsodium-dev" "zlib1g-dev" "libjpeg-dev" "packagekit" "python3-wheel" "nginx")
+    
+    if sudo -n true 2>/dev/null; then
+        sudo apt-get install -y "${m_deps[@]}"
+    else
+         echo "  [!] Sudo required for Moonraker dependencies."
+         sudo apt-get install -y "${m_deps[@]}"
+    fi
+
+    # 2. Clone
+    local repo_dir="$HOME/moonraker"
+    if [ -d "$repo_dir" ]; then
+        log_info "Moonraker repo exists. Pulling..."
+        cd "$repo_dir" && git pull
+    else
+        exec_silent "Cloning Moonraker" "git clone https://github.com/Arksine/moonraker.git $repo_dir"
+    fi
+
+    # 3. VirtualEnv
+    local env_dir="$HOME/moonraker-env"
+    if [ ! -d "$env_dir" ]; then
+        exec_silent "Creating VirtualEnv" "virtualenv -p python3 $env_dir"
+        exec_silent "Installing Dependencies" "$env_dir/bin/pip install -r $repo_dir/scripts/moonraker-requirements.txt"
+    fi
+
+    # 4. Service File
+    # (Simplified standard service file)
+    cat <<EOF | sudo tee /etc/systemd/system/moonraker.service >/dev/null
+[Unit]
+Description=Moonraker API Server for Klipper
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=$USER
+SyslogIdentifier=moonraker
+ExecStart=$HOME/moonraker-env/bin/python $HOME/moonraker/moonraker/moonraker.py -d $HOME/printer_data
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    sudo systemctl daemon-reload
+    sudo systemctl enable moonraker
+    sudo systemctl restart moonraker
+    
+    log_success "Moonraker installed and service started."
     read -p "  Press Enter..."
 }

@@ -40,7 +40,7 @@ function main() {
             1) run_autopilot ;;
             2) run_installer_menu ;;
             3) run_ui_installer ;;
-            4) run_katana_flow_installer ;;
+            4) run_vision_stack ;;
             5) run_forge ;;
             6) run_engine_manager ;;
             7) run_dr_katana ;;
