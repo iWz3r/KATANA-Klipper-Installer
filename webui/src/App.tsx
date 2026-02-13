@@ -5,10 +5,11 @@ import SystemHealth from './components/SystemHealth';
 import ConfigEditor from './components/ConfigEditor';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
 import DashboardLayout from './components/DashboardLayout';
+import JobHistory from './components/JobHistory';
 import { useState } from 'react';
 import './index.css';
 
-type View = 'DASHBOARD' | 'CONSOLE' | 'FILES' | 'SYSTEM' | 'CONFIG' | 'DIAGNOSTICS';
+type View = 'DASHBOARD' | 'CONSOLE' | 'FILES' | 'SYSTEM' | 'CONFIG' | 'DIAGNOSTICS' | 'JOBS';
 
 function App() {
   const printer = useKatanaLink();
@@ -28,6 +29,7 @@ function App() {
         </div>
         <nav>
           <button className={`nav-item ${activeView === 'DASHBOARD' ? 'active' : ''}`} onClick={() => setActiveView('DASHBOARD')}>DASHBOARD</button>
+          <button className={`nav-item ${activeView === 'JOBS' ? 'active' : ''}`} onClick={() => setActiveView('JOBS')}>JOBS</button>
           <button className={`nav-item ${activeView === 'CONSOLE' ? 'active' : ''}`} onClick={() => setActiveView('CONSOLE')}>CONSOLE</button>
           <button className={`nav-item ${activeView === 'FILES' ? 'active' : ''}`} onClick={() => setActiveView('FILES')}>FILES</button>
           <button className={`nav-item ${activeView === 'CONFIG' ? 'active' : ''}`} onClick={() => setActiveView('CONFIG')}>CONFIG</button>
@@ -42,6 +44,9 @@ function App() {
         {activeView === 'DASHBOARD' && (
           <DashboardLayout />
         )}
+
+        {/* JOBS VIEW */}
+        {activeView === 'JOBS' && <JobHistory />}
 
         {/* CONSOLE VIEW */}
         {activeView === 'CONSOLE' && <ConsolePanel />}

@@ -5,12 +5,38 @@ export default function DiagnosticsPanel() {
     const alerts = useDiagnostics();
     const { addLog } = useGCodeStore();
     const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [downloading, setDownloading] = useState(false);
 
     const handleAction = (action: string) => {
         if (action === 'FIRMWARE_RESTART') {
             const link = new KatanaLink();
             link.sendGCode('FIRMWARE_RESTART');
             addLog("Sent FIRMWARE_RESTART command", "command");
+        }
+    };
+
+    const handleDownloadBundle = async () => {
+        setDownloading(true);
+        try {
+            const response = await fetch('/api/system/diagnostics/bundle');
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `katana_support_bundle_${new Date().toISOString().slice(0,10)}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                addLog("Support bundle downloaded", "response");
+            } else {
+                addLog("Failed to download bundle", "error");
+            }
+        } catch (err) {
+            addLog("Bundle download failed: " + String(err), "error");
+        } finally {
+            setDownloading(false);
         }
     };
 
@@ -29,11 +55,20 @@ export default function DiagnosticsPanel() {
         <div className="glass-panel diagnostics-container">
             <div className="diag-header">
                 <h2>SYSTEM DIAGNOSTICS</h2>
-                {displayErrors.length > 0 ? (
-                    <span className="badge-critical">{displayErrors.length} ACTIVE ISSUES</span>
-                ) : (
-                    <span className="badge-success">SYSTEM NOMINAL</span>
-                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <button 
+                        className="btn-download" 
+                        onClick={handleDownloadBundle}
+                        disabled={downloading}
+                    >
+                        {downloading ? 'CREATING BUNDLE...' : '📦 SUPPORT BUNDLE'}
+                    </button>
+                    {displayErrors.length > 0 ? (
+                        <span className="badge-critical">{displayErrors.length} ACTIVE ISSUES</span>
+                    ) : (
+                        <span className="badge-success">SYSTEM NOMINAL</span>
+                    )}
+                </div>
             </div>
 
             <div className="diag-layout">
@@ -201,6 +236,24 @@ export default function DiagnosticsPanel() {
                 .check-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
                 .placeholder { 
                     height: 100%; display: flex; alignItems: center; justifyContent: center; color: #444; 
+                }
+                .btn-download {
+                    background: rgba(0, 150, 255, 0.15);
+                    border: 1px solid rgba(0, 150, 255, 0.4);
+                    color: #0af;
+                    padding: 0.5rem 1rem;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.85rem;
+                    transition: all 0.2s;
+                }
+                .btn-download:hover:not(:disabled) {
+                    background: rgba(0, 150, 255, 0.25);
+                    border-color: #0af;
+                }
+                .btn-download:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
                 }
             `}</style>
         </div>
