@@ -1,5 +1,8 @@
 # Simulates KATANAOS in a Docker container
 
+# Fix Path for macOS Docker Desktop
+export PATH=$PATH:/usr/local/bin:/Applications/Docker.app/Contents/Resources/bin
+
 # 0. Check for Docker
 if ! command -v docker &> /dev/null; then
     echo "ERROR: Docker is not installed or not running."
