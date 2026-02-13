@@ -9,22 +9,25 @@ function run_engine_manager() {
     echo ""
     echo "  1) Switch to KLIPPER (Standard)"
     echo "  2) Switch to KALICO (High-Performance)"
+    echo "  3) Switch to RatOS (Klipper Fork)"
     echo "  B) Back"
     read -p "  >> " ech
     
     case $ech in
         1) switch_core "klipper" ;;
         2) switch_core "kalico" ;;
+        3) switch_core "ratos" ;;
         [bB]) return ;;
     esac
 }
 
 function get_current_engine() {
-    # Check where ~/klipper symlink points to
     if [ -L "$HOME/klipper" ]; then
         local target=$(readlink "$HOME/klipper")
         if [[ "$target" == *"kalico"* ]]; then
             echo "${C_GREEN}KALICO${C_RESET}"
+        elif [[ "$target" == *"ratos"* ]]; then
+             echo "${C_GREEN}RatOS${C_RESET}"
         elif [[ "$target" == *"klipper"* ]]; then
             echo "${C_CYAN}KLIPPER${C_RESET}"
         else
@@ -48,6 +51,9 @@ function switch_core() {
     elif [ "$target" == "kalico" ]; then
         target_repo="$HOME/kalico_repo"
         target_env="$HOME/kalico_env"
+    elif [ "$target" == "ratos" ]; then
+        target_repo="$HOME/ratos_repo"
+        target_env="$HOME/ratos_env"
     else
         log_error "Unknown target: $target"
         return 1

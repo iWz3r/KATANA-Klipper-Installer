@@ -9,6 +9,16 @@ NC='\033[0m'
 
 WIDTH=68
 
+function get_current_engine_short() {
+    if [ -L "$HOME/klipper" ]; then
+        local target=$(readlink "$HOME/klipper")
+        if [[ "$target" == *"kalico"* ]]; then echo "KALICO"; 
+        elif [[ "$target" == *"ratos"* ]]; then echo "RatOS";
+        elif [[ "$target" == *"klipper"* ]]; then echo "KLIPPER";
+        else echo "UNKNOWN"; fi
+    else echo "NONE"; fi
+}
+
 # --- HELPERS ---
 function header() {
     clear
@@ -71,6 +81,7 @@ function draw_main_menu() {
     draw_mid
     get_status_line "Klipper" "klipper" "3D Printer Firmware"
     get_status_line "Kalico" "$HOME/kalico_repo" "Alternative Firmware" "true"
+    get_status_line "RatOS" "$HOME/ratos_repo" "Klipper Fork (RatRig)" "true"
     get_status_line "Moonraker" "moonraker" "API Server"
     get_status_line "Mainsail" "$HOME/mainsail" "Web Interface" "true"
     get_status_line "Crowsnest" "crowsnest" "Webcam Daemon"
@@ -83,12 +94,12 @@ function draw_main_menu() {
     # Menu Items
     # Format: [ID] NAME     Description
     printf "  ${C_PURPLE}║${NC} ${C_NEON}[1] AUTO-PILOT${NC}       ${C_GREY}Full Stack Install (God Mode)${NC}      ${C_PURPLE}║${NC}\n"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[2] CORE ENGINE${NC}      ${C_GREY}Klipper, Moonraker & Nginx${NC}         ${C_PURPLE}║${NC}\n"
+    printf "  ${C_PURPLE}║${NC} ${C_NEON}[2] CORE INSTALLER${NC}   ${C_GREY}Get Klipper, Kalico or RatOS${NC}       ${C_PURPLE}║${NC}\n"
     printf "  ${C_PURPLE}║${NC} ${C_NEON}[3] WEB INTERFACE${NC}    ${C_GREY}Mainsail / Fluidd${NC}                  ${C_PURPLE}║${NC}\n"
     printf "  ${C_PURPLE}║${NC} ${C_NEON}[4] HMI & VISION${NC}     ${C_GREY}Crowsnest & KlipperScreen${NC}          ${C_PURPLE}║${NC}\n"
     echo -e "  ${C_PURPLE}║${NC}                                                                  ${C_PURPLE}║${NC}"
     printf "  ${C_PURPLE}║${NC} ${C_NEON}[5] THE FORGE${NC}        ${C_GREY}Flash & CAN-Bus Automator${NC}          ${C_PURPLE}║${NC}\n"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[6] ENGINE MGR${NC}       ${C_GREY}Klipper <-> Kalico Switch${NC}          ${C_PURPLE}║${NC}\n"
+    printf "  ${C_PURPLE}║${NC} ${C_NEON}[6] ENGINE SWITCH${NC}    ${C_GREY}Active: $(get_current_engine_short)${NC}              ${C_PURPLE}║${NC}\n"
     echo -e "  ${C_PURPLE}║${NC}                                                                  ${C_PURPLE}║${NC}"
     printf "  ${C_PURPLE}║${NC} ${C_NEON}[7] DR. KATANA${NC}       ${C_GREY}Log Diagnostics & Repair${NC}           ${C_PURPLE}║${NC}\n"
     printf "  ${C_PURPLE}║${NC} ${C_NEON}[8] SYSTEM PREP${NC}      ${C_GREY}Updates & Dependencies${NC}             ${C_PURPLE}║${NC}\n"

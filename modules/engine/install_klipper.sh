@@ -5,6 +5,7 @@ function install_core_stack() {
     echo "  1) Install Klipper (Standard)"
     echo "  2) Install Moonraker"
     echo "  3) Install Kalico (High-Performance)"
+    echo "  4) Install RatOS (Klipper Fork)"
     echo "  B) Back"
     read -p "  >> " ch
 
@@ -12,8 +13,32 @@ function install_core_stack() {
         1) do_install_klipper "Standard" ;;
         2) do_install_moonraker ;;
         3) do_install_kalico ;;
+        4) do_install_ratos ;;
         [bB]) return ;;
     esac
+}
+
+function do_install_ratos() {
+    log_info "Installing RatOS (Klipper Fork)..."
+    
+    # 1. Clone
+    local repo_dir="$HOME/ratos_repo"
+    if [ -d "$repo_dir" ]; then
+        log_info "RatOS repo already exists. Pulling..."
+        cd "$repo_dir" && git pull
+    else
+        exec_silent "Cloning RatOS" "git clone https://github.com/Rat-OS/klipper.git $repo_dir"
+    fi
+
+    # 2. VirtualEnv
+    local env_dir="$HOME/ratos_env"
+    if [ ! -d "$env_dir" ]; then
+        exec_silent "Creating VirtualEnv" "virtualenv -p python3 $env_dir"
+        exec_silent "Installing Dependencies" "$env_dir/bin/pip install -r $repo_dir/scripts/klippy-requirements.txt"
+    fi
+    
+    log_success "RatOS installed. Use 'Engine Manager' to switch to it."
+    read -p "  Press Enter..."
 }
 
     local variant="$1"
