@@ -1,4 +1,4 @@
-# --- VISUAL ENGINE (v1.5 NEON RESTORED) ---
+# --- VISUAL ENGINE (v2.0 BETA) ---
 C_PURPLE='\033[38;5;93m'
 C_NEON='\033[38;5;51m'   # Cyan/Neon
 C_GREEN='\033[38;5;46m'
@@ -7,7 +7,7 @@ C_WHITE='\033[38;5;255m'
 C_RED='\033[38;5;196m'
 NC='\033[0m'
 
-WIDTH=68
+WIDTH=66 # Inner width excluding borders
 
 function get_current_engine_short() {
     if [ -L "$HOME/klipper" ]; then
@@ -29,7 +29,7 @@ function header() {
      \  /    | ' /   / _ \   | |   / _ \ |  \| | / _ \  | | | | \___ \
       \/     | . \  / ___ \  | |  / ___ \| |\  |/ ___ \ | |_| |  ___) |
              |_|\_\/_/   \_\ |_| /_/   \_\_| \_/_/   \_\ \___/  |____/ 
-                                                    v1.5 NEON
+                                                    v2.0 BETA 
 EOF
     echo -e "      ${C_NEON}>> SYSTEM OVERLORD // COMMAND INTERFACE${NC}"
     echo ""
@@ -42,42 +42,103 @@ function draw_header() {
     echo ""
 }
 
+# Draws a line with left/right borders and fills content with spaces up to WIDTH
+# Usage: print_line "Left Content" "Right Content (Optional)" "Color Code for Left"
+function print_line() {
+    local left="$1"
+    local right="$2"
+    local color_left="${3:-$C_NEON}"
+    
+    # Calculate pure lengths without colors
+    local len_left=${#left}
+    local len_right=${#right}
+    
+    # Total available space for padding
+    local padding=$((WIDTH - len_left - len_right - 2)) # -2 for spacing
+    
+    # Build the line
+    # Left Border
+    printf "  ${C_PURPLE}║${NC} "
+    
+    # Left Content
+    echo -ne "${color_left}${left}${NC}"
+    
+    # Middle Padding
+    for ((i=0; i<padding; i++)); do echo -ne " "; done
+    
+    # Right Content
+    echo -ne " ${C_GREY}${right}${NC}"
+    
+    # Right Border
+    echo -e " ${C_PURPLE}║${NC}"
+}
+
 function get_status_line() {
     local name="$1"
     local service="$2"
     local desc="$3"
     local active=${4:-false} # If true, check file/dir instead of service
     
-    local status="${C_GREY}OFFLINE${NC}"
-    local dot="${C_GREY}○${NC}"
+    local status="OFFLINE"
+    local color="$C_GREY"
+    local dot="○"
     
     if [ "$active" == "true" ]; then
          # Special check for files/dirs (e.g. Kalico)
          if [ -d "$service" ]; then
-             status="${C_GREEN}ONLINE ${NC}"
-             dot="${C_GREEN}●${NC}"
+             status="ONLINE "
+             color="$C_GREEN"
+             dot="●"
          fi
     else
         # Service check
         if systemctl is-active --quiet "$service" 2>/dev/null; then
-            status="${C_GREEN}ONLINE ${NC}"
-            dot="${C_GREEN}●${NC}"
+             status="ONLINE "
+             color="$C_GREEN"
+             dot="●"
         fi
     fi
     
-    # Format:  ● Name    : ONLINE    Description
-    printf "  ${C_PURPLE}║${NC} %b %-12s : %b   %-28s ${C_PURPLE}║${NC}\n" "$dot" "$name" "$status" "$desc"
+    # Manual padding to avoid printf color issues
+    # Format: ● Name [12 chars] : STATUS [7 chars]    Description
+    # Total inner width is 66 chars.
+    # Pattern: " D Name         : STATUS   Description                "
+    
+    # 1. Build the status block (fixed width 25 chars)
+    # "● Name        : STATUS "
+    local s_block_len=25
+    local name_pad=$((12 - ${#name}))
+    
+    printf "  ${C_PURPLE}║${NC} ${color}${dot} ${name}${NC}"
+    for ((i=0; i<name_pad; i++)); do echo -ne " "; done
+    echo -ne " : ${color}${status}${NC}   "
+    
+    # 2. Description (Flexible)
+    # Remaining width: 66 - 2 (space) - 1 (dot) - 1 (space) - 12 (name) - 3 ( : ) - 7 (status) - 3 (spaces) = 37 chars?
+    # Actually: 1+1+12+3+7+3 = 27 chars used.
+    # 66 - 27 = 39 chars for description + spaces
+    local used_len=27
+    local desc_pad=$((WIDTH - used_len - ${#desc}))
+    
+    echo -ne "${C_WHITE}${desc}${NC}"
+    for ((i=0; i<desc_pad; i++)); do echo -ne " "; done
+    
+    echo -e "${C_PURPLE}║${NC}"
 }
 
-function draw_top() { echo -e "${C_PURPLE}╔══════════════════════════════════════════════════════════════════╗${NC}"; }
-function draw_mid() { echo -e "${C_PURPLE}╠══════════════════════════════════════════════════════════════════╣${NC}"; }
-function draw_bot() { echo -e "${C_PURPLE}╚══════════════════════════════════════════════════════════════════╝${NC}"; }
+function draw_top() { echo -e "  ${C_PURPLE}╔══════════════════════════════════════════════════════════════════╗${NC}"; }
+function draw_mid() { echo -e "  ${C_PURPLE}╠══════════════════════════════════════════════════════════════════╣${NC}"; }
+function draw_bot() { echo -e "  ${C_PURPLE}╚══════════════════════════════════════════════════════════════════╝${NC}"; }
 
 function draw_main_menu() {
     header
     
     draw_top
-    echo -e "  ${C_PURPLE}║${NC} ${C_WHITE}SYSTEM STATUS MATRIX${NC}                                         ${C_PURPLE}║${NC}"
+    # Title Line
+    printf "  ${C_PURPLE}║${NC} ${C_WHITE}SYSTEM STATUS MATRIX${NC}"
+    for ((i=0; i<46; i++)); do echo -ne " "; done
+    echo -e "${C_PURPLE}║${NC}"
+    
     draw_mid
     get_status_line "Klipper" "klipper" "3D Printer Firmware"
     get_status_line "Kalico" "$HOME/kalico_repo" "Alternative Firmware" "true"
@@ -87,25 +148,46 @@ function draw_main_menu() {
     get_status_line "Crowsnest" "crowsnest" "Webcam Daemon"
 
     draw_mid
-    echo -e "  ${C_PURPLE}║${NC}                                                                  ${C_PURPLE}║${NC}"
-    echo -e "  ${C_PURPLE}║${NC} ${C_WHITE}COMMAND DECK${NC}                                                 ${C_PURPLE}║${NC}"
+    # Empty Line
+    printf "  ${C_PURPLE}║${NC}"
+    for ((i=0; i<66; i++)); do echo -ne " "; done
+    echo -e "${C_PURPLE}║${NC}"
+    
+    # Command Deck Title
+    printf "  ${C_PURPLE}║${NC} ${C_WHITE}COMMAND DECK${NC}"
+    for ((i=0; i<54; i++)); do echo -ne " "; done
+    echo -e "${C_PURPLE}║${NC}"
+    
     draw_mid
     
     # Menu Items
-    # Format: [ID] NAME     Description
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[1] AUTO-PILOT${NC}       ${C_GREY}Full Stack Install (God Mode)${NC}      ${C_PURPLE}║${NC}\n"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[2] CORE INSTALLER${NC}   ${C_GREY}Get Klipper, Kalico or RatOS${NC}       ${C_PURPLE}║${NC}\n"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[3] WEB INTERFACE${NC}    ${C_GREY}Mainsail / Fluidd${NC}                  ${C_PURPLE}║${NC}\n"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[4] HMI & VISION${NC}     ${C_GREY}Crowsnest & KlipperScreen${NC}          ${C_PURPLE}║${NC}\n"
-    echo -e "  ${C_PURPLE}║${NC}                                                                  ${C_PURPLE}║${NC}"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[5] THE FORGE${NC}        ${C_GREY}Flash & CAN-Bus Automator${NC}          ${C_PURPLE}║${NC}\n"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[6] ENGINE SWITCH${NC}    ${C_GREY}Active: $(get_current_engine_short)${NC}              ${C_PURPLE}║${NC}\n"
-    echo -e "  ${C_PURPLE}║${NC}                                                                  ${C_PURPLE}║${NC}"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[7] DR. KATANA${NC}       ${C_GREY}Log Diagnostics & Repair${NC}           ${C_PURPLE}║${NC}\n"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[8] SYSTEM PREP${NC}      ${C_GREY}Updates & Dependencies${NC}             ${C_PURPLE}║${NC}\n"
-    printf "  ${C_PURPLE}║${NC} ${C_NEON}[9] SEC & BACKUP${NC}     ${C_GREY}Firewall & Backup Vault${NC}            ${C_PURPLE}║${NC}\n"
+    print_line "[1] AUTO-PILOT" "Full Stack Install (God Mode)"
+    print_line "[2] CORE INSTALLER" "Get Klipper, Kalico or RatOS"
+    print_line "[3] WEB INTERFACE" "Mainsail / Fluidd"
+    print_line "[4] HMI & VISION" "Crowsnest & KlipperScreen"
+    
+    # Empty Line
+    printf "  ${C_PURPLE}║${NC}"
+    for ((i=0; i<66; i++)); do echo -ne " "; done
+    echo -e "${C_PURPLE}║${NC}"
+    
+    print_line "[5] THE FORGE" "Flash & CAN-Bus Automator"
+    
+    # Active Engine (Dynamic)
+    local eng=$(get_current_engine_short)
+    print_line "[6] ENGINE SWITCH" "Active: $eng"
+    
+    # Empty Line
+    printf "  ${C_PURPLE}║${NC}"
+    for ((i=0; i<66; i++)); do echo -ne " "; done
+    echo -e "${C_PURPLE}║${NC}"
+    
+    print_line "[7] DR. KATANA" "Log Diagnostics & Repair"
+    print_line "[8] SYSTEM PREP" "Updates & Dependencies"
+    print_line "[9] SEC & BACKUP" "Firewall & Backup Vault"
+    
     draw_mid
-    printf "  ${C_PURPLE}║${NC} ${C_RED}[X] EXIT${NC}             ${C_GREY}Close KATANAOS${NC}                     ${C_PURPLE}║${NC}\n"
+    print_line "[X] EXIT" "Close KATANAOS" "$C_RED"
     draw_bot
     echo ""
 }
