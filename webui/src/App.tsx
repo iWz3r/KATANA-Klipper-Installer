@@ -6,14 +6,30 @@ import ConfigEditor from './components/ConfigEditor';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
 import DashboardLayout from './components/DashboardLayout';
 import JobHistory from './components/JobHistory';
-import { useState } from 'react';
+import Settings from './components/Settings';
+import ConfigDiff from './components/ConfigDiff';
+import { useState, useEffect } from 'react';
 import './index.css';
 
-type View = 'DASHBOARD' | 'CONSOLE' | 'FILES' | 'SYSTEM' | 'CONFIG' | 'DIAGNOSTICS' | 'JOBS';
+type View = 'DASHBOARD' | 'CONSOLE' | 'FILES' | 'SYSTEM' | 'CONFIG' | 'DIAGNOSTICS' | 'JOBS' | 'SETTINGS' | 'CONFIGDIFF';
 
 function App() {
   const printer = useKatanaLink();
   const [activeView, setActiveView] = useState<View>('DASHBOARD');
+
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('horizon_ui_settings');
+    if (savedSettings) {
+      try {
+        const settings = JSON.parse(savedSettings);
+        if (settings.theme) {
+          document.documentElement.setAttribute('data-theme', settings.theme);
+        }
+      } catch (e) {
+        console.error('Failed to load theme:', e);
+      }
+    }
+  }, []);
 
   if (!printer) return <div className="loading">Initializing KATANA Uplink...</div>;
 
@@ -33,8 +49,10 @@ function App() {
           <button className={`nav-item ${activeView === 'CONSOLE' ? 'active' : ''}`} onClick={() => setActiveView('CONSOLE')}>CONSOLE</button>
           <button className={`nav-item ${activeView === 'FILES' ? 'active' : ''}`} onClick={() => setActiveView('FILES')}>FILES</button>
           <button className={`nav-item ${activeView === 'CONFIG' ? 'active' : ''}`} onClick={() => setActiveView('CONFIG')}>CONFIG</button>
+          <button className={`nav-item ${activeView === 'CONFIGDIFF' ? 'active' : ''}`} onClick={() => setActiveView('CONFIGDIFF')}>CONFIG DIFF</button>
           <button className={`nav-item ${activeView === 'DIAGNOSTICS' ? 'active' : ''}`} onClick={() => setActiveView('DIAGNOSTICS')}>DIAGNOSTICS</button>
           <button className={`nav-item ${activeView === 'SYSTEM' ? 'active' : ''}`} onClick={() => setActiveView('SYSTEM')}>SYSTEM</button>
+          <button className={`nav-item ${activeView === 'SETTINGS' ? 'active' : ''}`} onClick={() => setActiveView('SETTINGS')}>SETTINGS</button>
         </nav>
       </header>
 
@@ -57,11 +75,17 @@ function App() {
         {/* CONFIG VIEW */}
         {activeView === 'CONFIG' && <ConfigEditor />}
 
+        {/* CONFIG DIFF VIEW */}
+        {activeView === 'CONFIGDIFF' && <ConfigDiff />}
+
         {/* DIAGNOSTICS VIEW */}
         {activeView === 'DIAGNOSTICS' && <DiagnosticsPanel />}
 
         {/* SYSTEM VIEW */}
         {activeView === 'SYSTEM' && <SystemHealth />}
+
+        {/* SETTINGS VIEW */}
+        {activeView === 'SETTINGS' && <Settings />}
 
       </main>
 

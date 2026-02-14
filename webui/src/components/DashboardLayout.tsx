@@ -4,6 +4,8 @@ import GridLayout from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import { useKatanaLink, client } from '../lib/moonraker';
+import ZOffsetTune from './ZOffsetTune';
+import PrintProgress from './PrintProgress';
 
 // --- ROBUST IMPORT LOGIC FOR VITE/CJS ---
 // The structure of 'GridLayout' varies depending on build (dev/prod) and bundler (Vite/Rollup)
@@ -95,8 +97,10 @@ function Widget({ title, children, style, ...props }: WidgetProps) {
 const DEFAULT_LAYOUT: Layout[] = [
     { i: 'toolhead', x: 0, y: 0, w: 4, h: 6 },
     { i: 'thermals', x: 0, y: 6, w: 4, h: 6 },
-    { i: 'viewport', x: 4, y: 0, w: 8, h: 10 },
-    { i: 'job_status', x: 4, y: 10, w: 8, h: 4 },
+    { i: 'print_progress', x: 0, y: 12, w: 4, h: 6 },
+    { i: 'viewport', x: 4, y: 0, w: 8, h: 8 },
+    { i: 'z_offset', x: 4, y: 8, w: 4, h: 6 },
+    { i: 'job_status', x: 8, y: 8, w: 4, h: 6 },
 ];
 
 // --- Real Widgets ---
@@ -386,9 +390,21 @@ export default function DashboardLayout() {
                         </Widget>
                     </div>
 
+                    <div key="print_progress">
+                        <Widget title="PRINT PROGRESS">
+                            <PrintProgress printer={printer} />
+                        </Widget>
+                    </div>
+
                     <div key="viewport">
                         <Widget title="WEBCAM">
                             <ViewportWidget />
+                        </Widget>
+                    </div>
+
+                    <div key="z_offset">
+                        <Widget title="Z-OFFSET TUNE">
+                            <ZOffsetTune printer={printer} />
                         </Widget>
                     </div>
 
